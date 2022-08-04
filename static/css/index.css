@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+#title{
+    text-align: center;
+}
+#map{
+    height: 700px;
+}
