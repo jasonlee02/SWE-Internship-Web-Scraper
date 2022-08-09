@@ -19,9 +19,15 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-@app.route('/generate')
+@app.route('/generate', methods = ['POST', 'GET'])
 def generate():
-    pass
+    if request.method == 'POST':
+        x = request.form['xinput']
+        y = request.form['yinput']
+        competitiveness = request.form['competitiveness']
+        return redirect('/generate')
+    else:
+        return render_template('generate.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

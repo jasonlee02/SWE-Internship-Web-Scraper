@@ -7,11 +7,26 @@
 
 {%block body%}
 <div class = "content">
-    <label>Your Location (x)</label>
-    <input type = "text" id = "xinput"><br>
-    <label>Your Location (y)</label>
-    <input type = "text" id = "yinput"><br>
-    <input type = "submit" action = "/generate" value = "Generate!">
+    <form action = "/generate" method = "POST">
+        <label>Your Location (x)</label>
+        <input type = "text" name = "xinput" id = "xinput"><br>
+        <label>Your Location (y)</label>
+        <input type = "text" name = "yinput" id = "yinput"><br>
+        <label>Desired Competitiveness (based on company size)</label>
+        <select name = "competitiveness" id = "competitiveness">
+            <option value = 1>1</option>
+            <option value = 2>2</option>
+            <option value = 3>3</option>
+            <option value = 4>4</option>
+            <option value = 5 selected>5</option>
+            <option value = 6>6</option>
+            <option value = 7>7</option>
+            <option value = 8>8</option>
+            <option value = 9>9</option>
+            <option value = 10>10</option>
+        </select><br>
+        <input type = "submit" value = "Generate!">
+    </form>
 </div>
 <div id="map"></div>
 <script
