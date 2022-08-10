@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from classes.job import job
+from scrapers.LinkedIn import LinkedInScraper
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -31,3 +33,14 @@ def generate():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+#websites to scrape:
+#LinkedIn
+#GlassDoor
+#Indeed
+#Chegg Internships
+#Nexxt
+#ZipRecruiter
+#GetWork
+#Lensa
+#Nexxt
