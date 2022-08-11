@@ -8,10 +8,9 @@
 {%block body%}
 <div class = "content">
     <form action = "/generate" method = "POST">
-        <label>Your Location (x)</label>
-        <input type = "text" name = "xinput" id = "xinput"><br>
-        <label>Your Location (y)</label>
-        <input type = "text" name = "yinput" id = "yinput"><br>
+        <!-- change this to a city search with google autofill -->
+        <label>Your Location</label>
+        <input type = "text" name = "location" id = "location"><br>
         <label>Desired Competitiveness (based on company size)</label>
         <select name = "competitiveness" id = "competitiveness">
             <option value = 1>1</option>

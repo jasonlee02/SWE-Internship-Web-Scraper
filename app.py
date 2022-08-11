@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from classes.job import job
+
 from scrapers.LinkedIn import LinkedInScraper
 
 app = Flask(__name__)
@@ -27,6 +28,8 @@ def generate():
         x = request.form['xinput']
         y = request.form['yinput']
         competitiveness = request.form['competitiveness']
+        searchquery = request.form['searchquery']
+
         return redirect('/generate')
     else:
         return render_template('generate.html')
@@ -39,8 +42,7 @@ if __name__ == "__main__":
 #GlassDoor
 #Indeed
 #Chegg Internships
-#Nexxt
 #ZipRecruiter
 #GetWork
-#Lensa
-#Nexxt
+#Monster
+#AngelList

@@ -8,15 +8,31 @@ function initMap() {
     map: map
   });
 
-  const xinput = document.getElementById("xinput");
-  const yinput = document.getElementById("yinput");
+  const location = document.getElementById("location");
+
+  const geocoder = new google.maps.Geocoder();
 
   map.addListener("click", (e) => {
     map.panTo(e.latLng);
     marker.setPosition(e.latLng);
-    xinput.value = e.latLng.lat();
-    yinput.value = e.latLng.lng();
-  })
-}
+    geocoder.geocode({
+      location: e.latLng,
+    }, (results, status) => {
+      if(status === 'OK') {
+          if(results && results.length) {
+              var filtered_array = results.filter(result => result.types.includes("locality")); 
+              var addressResult = filtered_array.length ? filtered_array[0]: results[0];
 
+              if(addressResult.address_components) {
+                  addressResult.address_components.forEach((component) => {
+                      if(component.types.includes('locality')) {
+                          location.value = component.long_name;
+                      }
+                  });
+              }
+          }
+      }
+  })
+})
+}
 window.initMap = initMap;
