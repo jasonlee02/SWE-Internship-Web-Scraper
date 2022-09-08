@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-from classes.job import job
 
 from scrapers.LinkedIn import LinkedInScraper
 
@@ -8,15 +7,20 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
-#class myInternships(db.Model):
-    #id = db.Column(db.Integer)
-    #locationX = db.Column(db.Integer)
-    #locationY = db.Column(db.Integer)
+class internships(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    companyName = db.Column(db.String)
+    jobTitle = db.Column(db.String)
+    location = db.Column(db.String)
+    link = db.Column(db.String)
+    saved = db.Column(db.Boolean)
 
-#class generatedInternships(db.Model):
-    #id = db.Column(db.String)
-    #locationX = db.Column(db.Integer)
-    #locationY = db.Column(db.Integer)
+    def __repr__(self):
+        return '<Internship %r>' % self.id
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 @app.route('/')
 def index():
@@ -25,14 +29,15 @@ def index():
 @app.route('/generate', methods = ['POST', 'GET'])
 def generate():
     if request.method == 'POST':
-        x = request.form['xinput']
-        y = request.form['yinput']
-        competitiveness = request.form['competitiveness']
+        location = request.form['location']
         searchquery = request.form['searchquery']
-
+        LinkedIn = LinkedInScraper(searchquery, location)
+        LinkedIn.scrapePage()
+        # LinkedIn.quit()
         return redirect('/generate')
     else:
-        return render_template('generate.html')
+        jobs = internships.query.order_by(internships.id).all()
+        return render_template('generate.html', jobs=jobs)
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -48,3 +53,6 @@ if __name__ == "__main__":
 #AngelList
 #Lever
 #Greenhouse
+#ashbyhq
+#dover
+#easyjobs.so

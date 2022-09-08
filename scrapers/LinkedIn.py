@@ -6,13 +6,10 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-from classes.job import job
-
 class LinkedInScraper:
-    def __init__(self, search, location, jobTitles):
+    def __init__(self, search, location):
         self.search = search
         self.location = location
-        self.jobTitles = jobTitles
 
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         urlSearch = self.search.replace(" ", "%20")
@@ -20,7 +17,6 @@ class LinkedInScraper:
         self.driver.get(requeststr)
 
         self.hashStrings = set(())
-        self.jobs = []
 
     def getHTML(self):
         return self.driver.page_source
@@ -31,18 +27,21 @@ class LinkedInScraper:
             elements[1].click()
     
     def scrapePage(self):
-        jobLinks = []
+        from app import internships
+        from app import db
         html = self.getHTML()
         soup = BeautifulSoup(html, 'lxml')
-        for jobCard in soup.select(".ember-view .jobs-search-results__list-item .occludable-update .p0 .relative .scaffold-layout__list-item"):
+
+        jobSearch = soup.find("ul", class_ = ["jobs-search__results-list"])
+        for jobCard in jobSearch.find_all("li"):
             companyName = None
             jobTitle = None
 
-            jobTitleTag = jobCard.select(".disabled .ember-view .job-card-container__link .job-card-list__title")
+            jobTitleTag = jobCard.find("h3", class_=["base-search-card__title"])
             if jobTitleTag is not None:
                 jobTitle = jobTitleTag.string.strip()
 
-            companyNameTag = jobCard.select(".job-card-container__link .job-card-container__company-name .ember-view")
+            companyNameTag = jobCard.find("a", class_=["hidden-nested-link"])
             if companyNameTag is not None:
                 companyName = companyNameTag.string.strip()
             
@@ -52,6 +51,15 @@ class LinkedInScraper:
                     pass
                 else:
                     self.hashStrings.add(hashString)
-                    jobPostDetails = jobCard.select(".disabled .ember-view .job-card-container__link")
+                    jobPostDetails = jobCard.find("a", class_=["base-card__full-link"])
                     jobPostLink = jobPostDetails.get("href")
+                    newJob = internships(companyName = companyName, jobTitle = jobTitle, location = self.location, link = jobPostLink, saved = False)
+                    try:
+                        db.session.add(newJob)
+                        db.session.commit()
+                    except:
+                        pass
+                        
+    def quit(self):
+        self.driver.quit()
     

@@ -1,7 +1,6 @@
 class job:
-    def __init__(self, company, name, location, link, competitiveness):
-        self.company = company
-        self.name = name
+    def __init__(self, companyName, jobTitle, location, link):
+        self.companyName = companyName
+        self.jobTitle = jobTitle
         self.location = location
         self.link = link
-        self.competitiveness = competitiveness

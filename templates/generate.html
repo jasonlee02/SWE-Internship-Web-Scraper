@@ -1,1 +1,11 @@
 {% extends 'base.html' %}
+
+{%block head%}
+
+{%endblock%}
+
+{%block body%}
+    {% for job in jobs %}
+        <h1>{{ job.companyName }}</h1>
+    {% endfor %}
+{%endblock%}
