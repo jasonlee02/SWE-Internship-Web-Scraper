@@ -41,18 +41,3 @@ def generate():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-#websites to scrape:
-#LinkedIn
-#GlassDoor
-#Indeed
-#Chegg Internships
-#ZipRecruiter
-#GetWork
-#Monster
-#AngelList
-#Lever
-#Greenhouse
-#ashbyhq
-#dover
-#easyjobs.so
