@@ -5,7 +5,20 @@
 {%endblock%}
 
 {%block body%}
-    {% for job in jobs %}
-        <h1>{{ job.companyName }}</h1>
-    {% endfor %}
+<table>
+    <tr>
+        <th>Company</th>
+        <th>Title</th>
+        <th>Location</th>
+        <th>Link</th>
+    </tr>
+{% for job in jobs %}
+    <tr>
+        <td>{{ job.companyName }}</td>
+        <td>{{ job.jobTitle }}</td>
+        <td>{{ job.location }}</td>
+        <td>{{ job.link }}</td>
+    </tr>
+{% endfor %}
+</table>
 {%endblock%}

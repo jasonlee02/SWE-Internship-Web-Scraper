@@ -33,11 +33,15 @@ def generate():
         searchquery = request.form['searchquery']
         LinkedIn = LinkedInScraper(searchquery, location)
         LinkedIn.scrapePage()
-        # LinkedIn.quit()
+        LinkedIn.quit()
         return redirect('/generate')
     else:
         jobs = internships.query.order_by(internships.id).all()
         return render_template('generate.html', jobs=jobs)
+
+@app.route('/delete')
+def delete():
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)
