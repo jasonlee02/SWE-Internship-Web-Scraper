@@ -6,12 +6,20 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+import os
 class LinkedInScraper:
     def __init__(self, search, location):
         self.search = search
         self.location = location
 
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        #self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        self.driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
         urlSearch = self.search.replace(" ", "%20")
         requeststr = f"https://www.linkedin.com/jobs/search?distance=100&keywords={urlSearch}&location={self.location}"
         self.driver.get(requeststr)
