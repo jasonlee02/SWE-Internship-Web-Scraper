@@ -25,7 +25,7 @@ function initMap() {
 
               if(addressResult.address_components) {
                   addressResult.address_components.forEach((component) => {
-                      if(component.types.includes('locality')) {
+                      if(component.types.includes("locality")) {
                           location.value = component.long_name;
                       }
                   });
