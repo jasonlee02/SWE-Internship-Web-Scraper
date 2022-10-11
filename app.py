@@ -24,6 +24,12 @@ def create_tables():
 
 @app.route("/")
 def index():
+    jobsToDelete = internships.query.filter(not internships.saved).all()
+    for job in jobsToDelete:
+        try:
+            db.session.delete(job)
+        except:
+            return "There was a problem clearing tasks"
     return render_template("index.html")
 
 @app.route("/generate", methods = ["POST", "GET"])
@@ -61,8 +67,14 @@ def save(id):
 
 @app.route("/saved")
 def saved():
-    jobs = internships.query.filter(internships.saved).all()
-    return render_template("saved.html", jobs=jobs)
+    jobsToDelete = internships.query.filter(not internships.saved).all()
+    for job in jobsToDelete:
+        try:
+            db.session.delete(job)
+        except:
+            return "There was a problem clearing tasks"
+    savedJobs = internships.query.filter(internships.saved).all()
+    return render_template("saved.html", jobs=savedJobs)
 
 if __name__ == "__main__":
     app.run(debug=True)

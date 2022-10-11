@@ -2,17 +2,14 @@ from bs4 import BeautifulSoup
 import asyncio
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 
-import os
 class LinkedInScraper:
     def __init__(self, search, location):
         self.search = search
         self.location = location
 
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        self.driver = webdriver.Chrome('./chromedriver')
         #use the above for personal use
 
         # chrome_options = webdriver.ChromeOptions()
@@ -26,8 +23,6 @@ class LinkedInScraper:
         urlSearch = self.search.replace(" ", "%20")
         requeststr = f"https://www.linkedin.com/jobs/search?distance=100&keywords={urlSearch}&location={self.location}"
         self.driver.get(requeststr)
-
-        self.hashStrings = set(())
 
     def getHTML(self):
         return self.driver.page_source
@@ -57,11 +52,7 @@ class LinkedInScraper:
                 companyName = companyNameTag.string.strip()
             
             if companyName and jobTitle:
-                hashString = companyName + "_" + jobTitle
-                if hashString in self.hashStrings:
-                    pass
-                else:
-                    self.hashStrings.add(hashString)
+                if not internships.query.filter(internships.companyName == companyName and internships.jobTitle == jobTitle).all():
                     jobPostDetails = jobCard.find("a", class_=["base-card__full-link"])
                     jobPostLink = jobPostDetails.get("href")
                     newJob = internships(companyName = companyName, jobTitle = jobTitle, location = self.location, link = jobPostLink, saved = False)
