@@ -55,6 +55,16 @@ def delete(id):
     except:
         return "There was a problem deleting that task"
 
+@app.route("/deleteSaved/<int:id>", methods = ["POST"])
+def deleteSaved(id):
+    task_to_delete = internships.query.get(id)
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect("/saved")
+    except:
+        return "There was a problem deleting that task"
+
 @app.route("/save/<int:id>", methods = ["POST"])
 def save(id):
     task_to_save = internships.query.get(id)
