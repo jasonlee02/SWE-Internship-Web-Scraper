@@ -18,18 +18,8 @@ class internships(db.Model):
     def __repr__(self):
         return "<Internship %r>" % self.id
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-@app.route("/")
+@app.route("/", methods = ["GET"])
 def index():
-    jobsToDelete = internships.query.filter(not internships.saved).all()
-    for job in jobsToDelete:
-        try:
-            db.session.delete(job)
-        except:
-            return "There was a problem clearing tasks"
     return render_template("index.html")
 
 @app.route("/generate", methods = ["POST", "GET"])
@@ -38,18 +28,18 @@ def generate():
         location = request.form["location"]
         searchquery = request.form["searchquery"]
         LinkedIn = LinkedInScraper(searchquery, location)
-        LinkedIn.scrapePage()
+        LinkedIn.getAllJobs()
         LinkedIn.quit()
         return redirect("/generate")
     else:
-        jobs = internships.query.order_by(internships.id).all()
+        jobs = internships.query.filter_by(saved=False).all()
         return render_template("generate.html", jobs=jobs)
 
 @app.route("/delete/<int:id>", methods = ["POST"])
 def delete(id):
-    task_to_delete = internships.query.get(id)
+    job_to_delete = internships.query.get(id)
     try:
-        db.session.delete(task_to_delete)
+        db.session.delete(job_to_delete)
         db.session.commit()
         return redirect("/generate")
     except:
@@ -57,9 +47,9 @@ def delete(id):
 
 @app.route("/deleteSaved/<int:id>", methods = ["POST"])
 def deleteSaved(id):
-    task_to_delete = internships.query.get(id)
+    job_to_delete = internships.query.get(id)
     try:
-        db.session.delete(task_to_delete)
+        db.session.delete(job_to_delete)
         db.session.commit()
         return redirect("/saved")
     except:
@@ -71,20 +61,28 @@ def save(id):
     try:
         task_to_save.saved = True
         db.session.commit()
-        return redirect('/generate')
+        return redirect("/generate")
     except:
         return "There was a problem saving that task"
 
-@app.route("/saved")
+@app.route("/saved", methods = ["GET"])
 def saved():
-    jobsToDelete = internships.query.filter(not internships.saved).all()
+    savedJobs = internships.query.filter_by(saved=True).all()
+    return render_template("saved.html", jobs=savedJobs)
+
+@app.route("/deleteAll", methods = ["POST"])
+def deleteAll():
+    jobsToDelete = internships.query.filter_by(saved=False).all()
     for job in jobsToDelete:
         try:
             db.session.delete(job)
+            db.session.commit()
         except:
             return "There was a problem clearing tasks"
-    savedJobs = internships.query.filter(internships.saved).all()
-    return render_template("saved.html", jobs=savedJobs)
+    next = request.form["next"]
+    if next == "saved":
+        return redirect("/saved")
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)

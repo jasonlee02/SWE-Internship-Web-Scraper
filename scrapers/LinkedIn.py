@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
-import asyncio
+import time
 
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 class LinkedInScraper:
@@ -21,16 +22,17 @@ class LinkedInScraper:
         #use the above for heroku
 
         urlSearch = self.search.replace(" ", "%20")
-        requeststr = f"https://www.linkedin.com/jobs/search?distance=100&keywords={urlSearch}&location={self.location}"
+        requeststr = f"https://www.linkedin.com/jobs/search?distance=100&f_E=1&keywords={urlSearch}&location={self.location}"
         self.driver.get(requeststr)
 
     def getHTML(self):
         return self.driver.page_source
     
-    def goNextPage(self):
-        elements = self.driver.find_elements(By.css(".artdeco-pagination__indicator .artdeco-pagination__indicator--number .active .selected .ember-view"))
-        if len(elements) > 1:
-            elements[1].click()
+    def scrollDown(self):
+        element = self.driver.find_element(By.CLASS_NAME, "li-footer")
+        ActionChains(self.driver)\
+            .scroll_to_element(element)\
+            .perform()
     
     def scrapePage(self):
         from app import internships
@@ -60,7 +62,11 @@ class LinkedInScraper:
                         db.session.add(newJob)
                         db.session.commit()
                     except:
-                        pass
+                        print("Error in adding job: " + companyName)
+
+    def getAllJobs(self):
+        self.scrollDown()
+        self.scrapePage()
                         
     def quit(self):
         self.driver.quit()
