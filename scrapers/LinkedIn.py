@@ -29,10 +29,16 @@ class LinkedInScraper:
         return self.driver.page_source
     
     def scrollDown(self):
-        element = self.driver.find_element(By.CLASS_NAME, "li-footer")
-        ActionChains(self.driver)\
-            .scroll_to_element(element)\
-            .perform()
+        #infinite-scroller__show-more-button
+        #see-more-jobs__viewed-all
+        element1 = self.driver.find_element(By.CLASS_NAME, "infinite-scroller__show-more-button")
+        element2 = self.driver.find_element(By.CLASS_NAME, "see-more-jobs__viewed-all")
+        if not element1.is_displayed() and not element2.is_displayed():
+            bottomElement = self.driver.find_element(By.CLASS_NAME, "li-footer")
+            ActionChains(self.driver)\
+                .scroll_to_element(bottomElement)\
+                .perform()
+            self.scrollDown()
     
     def scrapePage(self):
         from app import internships
