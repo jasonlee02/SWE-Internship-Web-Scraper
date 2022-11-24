@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+
 import time
 
 from selenium import webdriver
@@ -60,7 +61,8 @@ class LinkedInScraper:
                 companyName = companyNameTag.string.strip()
             
             if companyName and jobTitle:
-                if not internships.query.filter(internships.companyName == companyName and internships.jobTitle == jobTitle).all():
+                sameJobs = internships.query.filter(internships.companyName == companyName).filter(internships.jobTitle == jobTitle).all()
+                if not sameJobs:
                     jobPostDetails = jobCard.find("a", class_=["base-card__full-link"])
                     jobPostLink = jobPostDetails.get("href")
                     newJob = internships(companyName = companyName, jobTitle = jobTitle, location = self.location, link = jobPostLink, saved = False)
