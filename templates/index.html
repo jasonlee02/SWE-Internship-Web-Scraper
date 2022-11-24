@@ -9,15 +9,15 @@
 <div class = "content">
     <form action = "/generate" method = "POST">
         <!-- change this to a city search with google autofill -->
-        <label>Your Location</label>
+        <label>Your Location:</label>
         <input type = "text" name = "location" id = "location"><br>
-        <label>Search Query</label>
-        <input type = "text" name = "searchquery" id = "searchquery" size = "30" value = "Software Engineering Internship">
-        <input type = "submit" value = "Generate!">
+        <label>Search Query:</label>
+        <input type = "text" name = "searchquery" id = "searchquery" size = "30" value = "Software Engineering Internship"><br>
+        <input type = "submit" value = "Generate!" id = "submitbutton">
     </form>
 </div>
 <div id="map"></div>
-<a href = "/saved">View saved</a>
+<div id="viewsaved"><a href = "/saved">View saved</a></div>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmLbqGArwcoVtia-DW4I0HZwwkA_KhHCE&callback=initMap"
       defer></script>
