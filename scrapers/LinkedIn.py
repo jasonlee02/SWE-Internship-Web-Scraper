@@ -11,7 +11,9 @@ class LinkedInScraper:
         self.search = search
         self.location = location
 
-        self.driver = webdriver.Chrome('./chromedriver')
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--headless")
+        self.driver = webdriver.Chrome('./chromedriver', chrome_options=chrome_options)
         #use the above for personal use
 
         # chrome_options = webdriver.ChromeOptions()

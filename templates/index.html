@@ -17,7 +17,10 @@
     </form>
 </div>
 <div id="map"></div>
-<div id="viewsaved"><a href = "/saved">View saved</a></div>
+<form action = "/deleteAll" method = "POST" class = "button">
+    <input type = "submit" value = "View saved" class = "buttoninput">
+    <input type = "hidden" value = "saved" name = "next">
+</form>
 <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmLbqGArwcoVtia-DW4I0HZwwkA_KhHCE&callback=initMap"
       defer></script>
